@@ -1,3 +1,4 @@
+const { createLiteral } = require("typescript");
 const { GRID_SIZE } = require("./constants");
 
 module.exports = {
@@ -56,4 +57,28 @@ function gameLoop(state) {
 
     randomFood();
   }
+
+  if (playerOne.vel.x || playerOne.vel.y) {
+    for (let cell of playerOne.snake) {
+      if (cell.x === playerOne.pos.x && cell.y === playerOne.pos.y) return 2;
+    }
+
+    playerOne.snake.push({ ...playerOne.pos });
+    playerOne.snake.shift();
+  }
+
+  return false;
+}
+
+function randomFood(state) {
+  food = {
+    x: Math.floor(Math.random() * GRID_SIZE),
+    y: Math.floor(Math.random() * GRID_SIZE),
+  };
+
+  for (let cell of state.player.snake){
+      if(cell.x === food.x && cell.y === food.y)
+        return randomFood(state);
+  }
+  state.food = food;
 }
