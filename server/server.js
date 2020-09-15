@@ -1,6 +1,7 @@
 const io = require("socket.io")();
 const { initGame, gameLoop, getUpdatedVelocity } = require("./game");
 const { FRAME_RATE } = require("./constants");
+const { makeid } = require("./utils");
 
 const state = {};
 const clientRoom = {};
@@ -55,7 +56,11 @@ io.on("connection", (client) => {
   }
 
   function handleKeydown(keyCode) {
-    // const rommName = clientRoom[client.id];
+    const roomName = clientRoom[client.id];
+    if (!roomName) {
+      return;
+    }
+
     try {
       keyCode = parseInt(keyCode);
     } catch (err) {
@@ -66,7 +71,8 @@ io.on("connection", (client) => {
     const vel = getUpdatedVelocity(keyCode);
 
     if (vel) {
-      state.player.vel = vel;
+      state[roomName].players[client.number - 1].vel = vel;
+      // state.player.vel = vel;
     }
   }
 
@@ -89,8 +95,8 @@ function startGameInterval(roomName) {
   }, 1000 / FRAME_RATE);
 }
 
-function emitGameState(roomName, state) {
-  io.sockets.in(roomName).emit("gameState", JSON.stringify(state));
+function emitGameState(room, state) {
+  io.sockets.in(room).emit("State", JSON.stringify(state));
 }
 
 function emitGameOver(roomName, winner) {
