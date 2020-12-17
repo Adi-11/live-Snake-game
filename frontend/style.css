@@ -1,0 +1,26 @@
+body {
+  perspective: 900px;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+#gameScreen {
+  display: none;
+}
+
+canvas {
+  margin-top: 20px;
+  border-radius: 20px;
+  border: 2px solid #0a0f9c;
+  box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2), 0px 0px 50px rgba(0, 0, 0, 0.2);
+  transform-style: preserve-3d;
+}
+
+#copy {
+  background: transparent;
+  border: none;
+}
+button:focus,
+button:hover {
+  border: none;
+  outline: none;
+}
